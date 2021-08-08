@@ -18,7 +18,7 @@
 <!--        app:layout_constraintTop_toTopOf="parent"-->
 <!--        />-->
 
-    <fragment
+    <FrameLayout
         android:id="@+id/login"
         android:name="com.example.yawa.LogInFragment"
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    </fragment>
+    </FrameLayout>
 
 <!--    <Button-->
 <!--        android:id="@+id/b_login"-->

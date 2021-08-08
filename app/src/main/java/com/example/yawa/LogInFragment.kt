@@ -1,10 +1,13 @@
 package com.example.yawa
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +30,20 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val b_login = view.findViewById(R.id.login_button) as Button
+        b_login.setOnClickListener {
+            val i = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://anilist.co/api/v2/oauth/authorize?client_id=5828&response_type=token")
+            )
+            startActivity(i);
+        };
     }
 
 //    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
