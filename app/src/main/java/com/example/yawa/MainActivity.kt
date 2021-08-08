@@ -7,9 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,14 +21,18 @@ class MainActivity : Activity() {
         val data: Uri? = intent?.data;
         //get session token from url
         var session_token: String? = data?.fragment?.split("=")?.get(1)?.split("&")?.get(0);
-        //print out session token to check
-        if(!session_token.equals("null")) {
-            val tv_s_token = findViewById<View>(R.id.s_token) as TextView;
+        //check if session token exists
+        if(!(session_token === null)) {
+            val tv_s_token = findViewById<View>(R.id.token_text) as TextView;
             tv_s_token.text = tv_s_token.text.toString() + session_token;
+
+
+        } else {
+
         }
 
         //button
-        val b_login = findViewById<View>(R.id.b_login) as Button
+        val b_login = findViewById<View>(R.id.login_button) as Button
         b_login.setOnClickListener {
             val i = Intent(
                 Intent.ACTION_VIEW,
