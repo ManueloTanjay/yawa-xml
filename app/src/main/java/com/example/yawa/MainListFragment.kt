@@ -29,9 +29,6 @@ class MainListFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
         }
 
-        val i = 0
-//            val tv_s_token = findViewById<View>(R.id.s_token) as TextView;
-//            tv_s_token.text = tv_s_token.text.toString() + session_token;
     }
 
     override fun onAttach(context: Context) {
@@ -62,7 +59,7 @@ class MainListFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String) =
+        fun newInstance(param1: String?) =
             MainListFragment().apply {
                 arguments = Bundle().apply {
                     putString("session_token", param1)

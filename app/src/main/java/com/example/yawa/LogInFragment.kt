@@ -36,6 +36,7 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val b_login = view.findViewById(R.id.login_button) as Button
         b_login.setOnClickListener {
             val i = Intent(
@@ -45,12 +46,6 @@ class LogInFragment : Fragment(R.layout.fragment_log_in) {
             startActivity(i);
         };
     }
-
-//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-//                              savedInstanceState: Bundle?): View? {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_log_in, container, false)
-//    }
 
     companion object {
         /**

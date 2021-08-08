@@ -2,6 +2,7 @@ package com.example.yawa
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -30,11 +31,24 @@ class MainActivity : FragmentActivity() {
         val data: Uri? = intent?.data;
         //get session token from url
         var session_token: String? = data?.fragment?.split("=")?.get(1)?.split("&")?.get(0);
+
+
+        //shared preferences for session token
+        val sharedPreferences = getSharedPreferences("yawa", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
         //check if session token exists
         if(!(session_token === null)) {
-            val bundle = Bundle()
-            bundle.putString("session_token", session_token)
+            if(!sharedPreferences.contains("session_token")) {
+                editor.apply{
+                    putString("session_token", session_token)
+                    apply()
+                }
+            }
+        }
+        if(sharedPreferences.contains("session_token")){
+            session_token = sharedPreferences.getString("session_token", null)
 
+            //create and inflate MainListFragment
             val mainListFragment = MainListFragment.newInstance(session_token)
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.login, mainListFragment)
