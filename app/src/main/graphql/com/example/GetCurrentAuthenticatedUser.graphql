@@ -1,0 +1,6 @@
+query GetCurrentAuthenticatedUser() {
+    Viewer {
+        id
+        name
+    }
+}
