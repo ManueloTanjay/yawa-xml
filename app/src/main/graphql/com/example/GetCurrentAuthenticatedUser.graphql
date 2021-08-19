@@ -1,6 +1,30 @@
 query GetCurrentAuthenticatedUser() {
-    Viewer {
-        id
-        name
+    media:Media (genre: "action", type: ANIME) {
+      id
+    	title {
+      	romaji
+      	english
+      	native
+    	}
+      startDate {
+        year
+        month
+        day
+      }
+      endDate {
+        year
+        month
+        day
+      }
+      averageScore
+      season
+      seasonYear
+      episodes
+      genres
+      bannerImage
+      description
+      coverImage {
+        medium
+      }
     }
 }

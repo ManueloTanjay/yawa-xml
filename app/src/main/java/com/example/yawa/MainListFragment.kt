@@ -1,13 +1,19 @@
 package com.example.yawa
 
+import GetCurrentAuthenticatedUserQuery
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_main_list.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.exception.ApolloException
 import kotlinx.android.synthetic.main.fragment_main_list.view.*
+import kotlinx.coroutines.runBlocking
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,6 +59,24 @@ class MainListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //fetch and change value of resource from layout
         view.s_token.text = session_token
+
+        val apolloClient = ApolloClient(serverUrl = "https://graphql.anilist.co/")
+        runBlocking {
+            val response = try {
+                apolloClient.query(GetCurrentAuthenticatedUserQuery())
+            } catch (e: ApolloException) {
+                val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
+                return@runBlocking
+            }
+
+            val launch = response.data?.media
+            if (launch == null || response.hasErrors()) {
+                return@runBlocking
+            }
+
+            println("Launch site: ${launch.title}")
+            Log.d("TAG", "QQQQQ ${launch.title}")
+        }
     }
 
     companion object {
