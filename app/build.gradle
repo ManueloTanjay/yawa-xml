@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id "com.apollographql.apollo3" version "3.0.0-alpha03"
+    //id("com.apollographql.apollo3").version("3.0.0")
 }
 
 android {
@@ -46,4 +48,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     compileOnly 'com.google.android.wearable:wearable:2.6.0'
+    implementation "com.apollographql.apollo3:apollo-runtime:3.0.0-alpha03"
+
 }

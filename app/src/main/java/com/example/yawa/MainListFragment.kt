@@ -29,12 +29,15 @@ class MainListFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
         }
 
+        val s = session_token
+        val i = 0
+
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.getString("session_token")?.let {
-            session_token = "session token in new fragment: \n" + it
+            session_token = it
         }
     }
 
@@ -43,9 +46,13 @@ class MainListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_main_list, container, false)
+        return inflater.inflate(R.layout.fragment_main_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //fetch and change value of resource from layout
         view.s_token.text = session_token
-        return view
     }
 
     companion object {
