@@ -1,6 +1,7 @@
 package com.example.yawa
 
 import GetCurrentAuthenticatedUserQuery
+import GetViewerQuery
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +12,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloRequest
+import com.apollographql.apollo3.api.http.HttpRequest
+import com.apollographql.apollo3.api.http.HttpResponse
+import com.apollographql.apollo3.api.http.withHeader
+import com.apollographql.apollo3.api.http.withHeaders
+import com.apollographql.apollo3.interceptor.ApolloInterceptor
+import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
+import okhttp3.Request
+import okhttp3.Interceptor
 import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.network.http.HttpInterceptor
+import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.apollographql.apollo3.network.http.HttpNetworkTransport
 import kotlinx.android.synthetic.main.fragment_main_list.view.*
 import kotlinx.coroutines.runBlocking
 
@@ -60,22 +73,30 @@ class MainListFragment : Fragment() {
         //fetch and change value of resource from layout
         view.s_token.text = session_token
 
-        val apolloClient = ApolloClient(serverUrl = "https://graphql.anilist.co/")
+        //val apolloClient = ApolloClient(serverUrl = "https://graphql.anilist.co/")
+        val apolloClient = ApolloClient(
+                networkTransport = HttpNetworkTransport(
+                        serverUrl = "https://graphql.anilist.co/",
+                        interceptors = listOf(AuthorizationInterceptor(session_token))
+                )
+        )
         runBlocking {
             val response = try {
-                apolloClient.query(GetCurrentAuthenticatedUserQuery())
+                apolloClient.query(GetViewerQuery())
             } catch (e: ApolloException) {
+                Log.d("qwerty", e.toString())
                 val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
+                toast.show()
                 return@runBlocking
             }
 
-            val launch = response.data?.media
+            val launch = response.data?.viewer
             if (launch == null || response.hasErrors()) {
                 return@runBlocking
             }
 
-            println("Launch site: ${launch.title}")
-            Log.d("TAG", "QQQQQ ${launch.title}")
+            println("Launch site: ${launch.id}")
+            Log.d("DEEZ NUTS", "QQQQQ ${launch.id} ${launch.name}")
         }
     }
 
@@ -96,5 +117,11 @@ class MainListFragment : Fragment() {
                     putString("session_token", param1)
                 }
             }
+    }
+
+    class AuthorizationInterceptor(val token: String) : HttpInterceptor {
+        override suspend fun intercept(request: HttpRequest,  chain: HttpInterceptorChain): HttpResponse {
+            return chain.proceed(request.withHeader("Authorization", "Bearer $token"))
+        }
     }
 }
