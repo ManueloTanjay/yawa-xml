@@ -32,6 +32,8 @@ import kotlinx.coroutines.runBlocking
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private var session_token = ""
+private var username = ""
+private var userID = ""
 
 /**
  * A simple [Fragment] subclass.
@@ -95,7 +97,10 @@ class MainListFragment : Fragment() {
                 return@runBlocking
             }
 
-            println("Launch site: ${launch.id}")
+            username = launch.name
+            userID = launch.id.toString()
+
+            view.s_token.text = "username: " + username + "\nuserID: " + userID
             Log.d("DEEZ NUTS", "QQQQQ ${launch.id} ${launch.name}")
         }
     }
