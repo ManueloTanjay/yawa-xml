@@ -56,4 +56,6 @@ class MainActivity : FragmentActivity() {
             }
         }
     }
+
+    //write function to get userID and username using GetViewer and pass into MainListFragment.newInstance()
 }

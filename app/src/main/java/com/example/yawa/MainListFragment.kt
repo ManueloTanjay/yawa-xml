@@ -13,15 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloRequest
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.api.http.withHeader
-import com.apollographql.apollo3.api.http.withHeaders
-import com.apollographql.apollo3.interceptor.ApolloInterceptor
-import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
-import okhttp3.Request
-import okhttp3.Interceptor
 import com.apollographql.apollo3.exception.ApolloException
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
@@ -123,6 +117,8 @@ class MainListFragment : Fragment() {
             Log.d("2ND QUERY", "QQQQQ" + op + "\n")
         }
     }
+
+    //write function to get user mediaListOptions using GetUserMediaListOptions
 
     companion object {
         /**
