@@ -1,6 +1,7 @@
 package com.example.yawa
 
 import GetCurrentAuthenticatedUserQuery
+import GetUserMediaListOptionsQuery
 import GetViewerQuery
 import android.content.Context
 import android.os.Bundle
@@ -102,6 +103,24 @@ class MainListFragment : Fragment() {
 
             view.s_token.text = "username: " + username + "\nuserID: " + userID
             Log.d("DEEZ NUTS", "QQQQQ ${launch.id} ${launch.name}")
+            /////////////////////////////////////////////
+            val response2 = try {
+                apolloClient.query(GetUserMediaListOptionsQuery(launch.id))
+            } catch (e: ApolloException) {
+                Log.d("qwerty", e.toString())
+                val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
+                toast.show()
+                return@runBlocking
+            }
+            val launch2 = response2.data?.user
+            if (launch2 == null || response2.hasErrors()) {
+                return@runBlocking
+            }
+
+            var op = launch2.mediaListOptions?.scoreFormat?.rawValue
+
+            //view.s_token.text = "username: " + username + "\nuserID: " + userID
+            Log.d("2ND QUERY", "QQQQQ" + op + "\n")
         }
     }
 
