@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
@@ -44,6 +45,13 @@ class MainListFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
         }
+
+        //shared preferences for session token
+        val sharedPreferences = activity?.getSharedPreferences("yawa", FragmentActivity.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        username = sharedPreferences?.getString("username", null).toString()
+        userID = sharedPreferences?.getString("userID", null).toString()
+
 
         val s = session_token
         val i = 0
@@ -78,43 +86,26 @@ class MainListFragment : Fragment() {
                 )
         )
         runBlocking {
-            val response = try {
-                apolloClient.query(GetViewerQuery())
-            } catch (e: ApolloException) {
-                Log.d("qwerty", e.toString())
-                val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
-                toast.show()
-                return@runBlocking
-            }
-
-            val launch = response.data?.viewer
-            if (launch == null || response.hasErrors()) {
-                return@runBlocking
-            }
-
-            username = launch.name
-            userID = launch.id.toString()
-
-            view.s_token.text = "username: " + username + "\nuserID: " + userID
-            Log.d("DEEZ NUTS", "QQQQQ ${launch.id} ${launch.name}")
+            view.s_token.text = "stoken: " + session_token + "\nusername: " + username + "\nuserID: " + userID
+            Log.d("DEEZ NUTS", "QQQQQ $userID $username")
             /////////////////////////////////////////////
-            val response2 = try {
-                apolloClient.query(GetUserMediaListOptionsQuery(launch.id))
-            } catch (e: ApolloException) {
-                Log.d("qwerty", e.toString())
-                val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
-                toast.show()
-                return@runBlocking
-            }
-            val launch2 = response2.data?.user
-            if (launch2 == null || response2.hasErrors()) {
-                return@runBlocking
-            }
-
-            var op = launch2.mediaListOptions?.scoreFormat?.rawValue
-
-            //view.s_token.text = "username: " + username + "\nuserID: " + userID
-            Log.d("2ND QUERY", "QQQQQ" + op + "\n")
+//            val response2 = try {
+//                apolloClient.query(GetUserMediaListOptionsQuery(userID.toInt()))
+//            } catch (e: ApolloException) {
+//                Log.d("qwerty", e.toString())
+//                val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
+//                toast.show()
+//                return@runBlocking
+//            }
+//            val launch2 = response2.data?.user
+//            if (launch2 == null || response2.hasErrors()) {
+//                return@runBlocking
+//            }
+//
+//            var op = launch2.mediaListOptions?.scoreFormat?.rawValue
+//
+//            //view.s_token.text = "username: " + username + "\nuserID: " + userID
+//            Log.d("2ND QUERY", "QQQQQ" + op + "\n")
         }
     }
 
