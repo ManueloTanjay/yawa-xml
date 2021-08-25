@@ -40,7 +40,7 @@ class MainActivity : FragmentActivity() {
         val data: Uri? = intent?.data;
         //get session token from url
         var session_token: String? = data?.fragment?.split("=")?.get(1)?.split("&")?.get(0);
-        //var session_token_expiry = data?.fragment?.split("=")?.get(3)
+        var session_token_expiry = data?.fragment?.split("=")?.get(3)
 
 
         //shared preferences for session token
@@ -57,6 +57,7 @@ class MainActivity : FragmentActivity() {
 
                     editor.apply {
                         putString("session_token", session_token)
+                        putString("session_token_expiry", session_token_expiry)
                         putString("username", userInfo?.username)
                         putString("userID", userInfo?.userID)
                         apply()

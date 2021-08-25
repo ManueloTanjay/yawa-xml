@@ -30,6 +30,7 @@ private const val ARG_PARAM1 = "param1"
 private var session_token = ""
 private var username = ""
 private var userID = ""
+private var sessionTokenExpiry = ""
 
 /**
  * A simple [Fragment] subclass.
@@ -51,6 +52,7 @@ class MainListFragment : Fragment() {
         val editor = sharedPreferences?.edit()
         username = sharedPreferences?.getString("username", null).toString()
         userID = sharedPreferences?.getString("userID", null).toString()
+        sessionTokenExpiry = sharedPreferences?.getString("session_token_expiry", null).toString()
 
 
         val s = session_token
@@ -86,8 +88,8 @@ class MainListFragment : Fragment() {
                 )
         )
         runBlocking {
-            view.s_token.text = "stoken: " + session_token + "\nusername: " + username + "\nuserID: " + userID
-            Log.d("DEEZ NUTS", "QQQQQ $userID $username")
+            view.s_token.text = "username: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + session_token
+                    Log.d("DEEZ NUTS", "QQQQQ $userID $username")
             /////////////////////////////////////////////
 //            val response2 = try {
 //                apolloClient.query(GetUserMediaListOptionsQuery(userID.toInt()))
