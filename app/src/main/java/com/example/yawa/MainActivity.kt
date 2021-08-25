@@ -1,23 +1,13 @@
 package com.example.yawa
 
 import GetViewerQuery
-import android.app.Activity
-import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.apollographql.apollo3.network.http.HttpNetworkTransport
-import kotlinx.android.synthetic.main.fragment_main_list.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
 
@@ -39,8 +29,8 @@ class MainActivity : FragmentActivity() {
         val action: String? = intent?.action;
         val data: Uri? = intent?.data;
         //get session token from url
-        var session_token: String? = data?.fragment?.split("=")?.get(1)?.split("&")?.get(0);
-        var session_token_expiry = data?.fragment?.split("=")?.get(3)
+        var sessionToken: String? = data?.fragment?.split("=")?.get(1)?.split("&")?.get(0);
+        var sessionTokenExpiration = data?.fragment?.split("=")?.get(3)
 
 
         //shared preferences for session token
@@ -49,15 +39,15 @@ class MainActivity : FragmentActivity() {
 
         runBlocking {
             //check if session token exists
-            if (!(session_token === null)) {
+            if (!(sessionToken === null)) {
                 if (!sharedPreferences.contains("session_token")) {
 
                     //get userInfo
-                    val userInfo = getUserInfo(session_token.toString())
+                    val userInfo = getUserInfo(sessionToken.toString())
 
                     editor.apply {
-                        putString("session_token", session_token)
-                        putString("session_token_expiry", session_token_expiry)
+                        putString("session_token", sessionToken)
+                        putString("session_token_expiry", sessionTokenExpiration)
                         putString("username", userInfo?.username)
                         putString("userID", userInfo?.userID)
                         apply()
@@ -65,10 +55,10 @@ class MainActivity : FragmentActivity() {
                 }
             }
             if (sharedPreferences.contains("session_token")) {
-                session_token = sharedPreferences.getString("session_token", null)
+                sessionToken = sharedPreferences.getString("session_token", null)
 
                 //create and inflate MainListFragment
-                val mainListFragment = MainListFragment.newInstance(session_token)
+                val mainListFragment = MainListFragment.newInstance(sessionToken)
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.login, mainListFragment)
                     commit()

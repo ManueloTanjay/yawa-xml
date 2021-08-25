@@ -1,8 +1,5 @@
 package com.example.yawa
 
-import GetCurrentAuthenticatedUserQuery
-import GetUserMediaListOptionsQuery
-import GetViewerQuery
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,13 +8,11 @@ import kotlinx.android.synthetic.main.fragment_main_list.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.api.http.withHeader
-import com.apollographql.apollo3.exception.ApolloException
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import com.apollographql.apollo3.network.http.HttpNetworkTransport
@@ -27,7 +22,7 @@ import kotlinx.coroutines.runBlocking
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
-private var session_token = ""
+private var sessionToken = ""
 private var username = ""
 private var userID = ""
 private var sessionTokenExpiry = ""
@@ -55,7 +50,7 @@ class MainListFragment : Fragment() {
         sessionTokenExpiry = sharedPreferences?.getString("session_token_expiry", null).toString()
 
 
-        val s = session_token
+        val s = sessionToken
         val i = 0
 
     }
@@ -63,7 +58,7 @@ class MainListFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.getString("session_token")?.let {
-            session_token = it
+            sessionToken = it
         }
     }
 
@@ -78,17 +73,17 @@ class MainListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //fetch and change value of resource from layout
-        view.s_token.text = session_token
+        view.sTokenTV.text = sessionToken
 
         //val apolloClient = ApolloClient(serverUrl = "https://graphql.anilist.co/")
         val apolloClient = ApolloClient(
                 networkTransport = HttpNetworkTransport(
                         serverUrl = "https://graphql.anilist.co/",
-                        interceptors = listOf(AuthorizationInterceptor(session_token))
+                        interceptors = listOf(AuthorizationInterceptor(sessionToken))
                 )
         )
         runBlocking {
-            view.s_token.text = "username: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + session_token
+            view.sTokenTV.text = "username: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + sessionToken
                     Log.d("DEEZ NUTS", "QQQQQ $userID $username")
             /////////////////////////////////////////////
 //            val response2 = try {

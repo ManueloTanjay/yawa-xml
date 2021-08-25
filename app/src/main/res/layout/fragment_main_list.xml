@@ -8,7 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/s_token"
+        android:id="@+id/sTokenTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="login success"
