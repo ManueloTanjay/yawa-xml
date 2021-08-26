@@ -1,0 +1,24 @@
+query GetUserCurrentAnimeList ($page: Int, $perPage: Int, $username: String) {
+    page:Page (page: $page, perPage: $perPage) {
+        pageInfo {
+            total
+            currentPage
+            lastPage
+            hasNextPage
+            perPage
+        }
+        mediaList(userName: $username, status: CURRENT, type: ANIME) {
+            id
+            score
+            progress
+            media {
+                id
+                episodes
+                title {
+                    english
+                    romaji
+                }
+            }
+        }
+    }
+}

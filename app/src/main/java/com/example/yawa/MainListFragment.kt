@@ -1,5 +1,6 @@
 package com.example.yawa
 
+import GetUserCurrentAnimeListQuery
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
 import com.apollographql.apollo3.api.http.withHeader
+import com.apollographql.apollo3.exception.ApolloException
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import com.apollographql.apollo3.network.http.HttpNetworkTransport
@@ -84,11 +86,24 @@ class MainListFragment : Fragment() {
         )
         runBlocking {
             view.sTokenTV.text = "userMediaListOptions: " + mediaListOptions + "\nusername: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + sessionToken
-                    Log.d("DEEZ NUTS", "QQQQQ $userID $username")
+            Log.d("DEEZ NUTS", "QQQQQ $userID $username")
+
+            val userCurrentAnimeList = try {
+                apolloClient.query(GetUserCurrentAnimeListQuery(1, 50, username))
+            } catch (e: ApolloException) {
+                Log.d("GETUSERMEDISLISTOPTIONS", e.toString())
+                return@runBlocking
+            }
+
+            val userCurrentAnimeListData = userCurrentAnimeList.data
+            if (userCurrentAnimeListData == null || userCurrentAnimeList.hasErrors()) {
+                return@runBlocking
+            }
+
+//            view.sTokenTV.text = userCurrentAnimeListData.toString()
+            Log.d("USERCURRANIDATA", userCurrentAnimeListData.toString())
         }
     }
-
-    //write function to get user mediaListOptions using GetUserMediaListOptions
 
     companion object {
         /**
