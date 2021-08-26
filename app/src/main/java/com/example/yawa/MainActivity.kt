@@ -1,5 +1,6 @@
 package com.example.yawa
 
+import GetUserMediaListOptionsQuery
 import GetViewerQuery
 import android.net.Uri
 import android.os.Bundle
@@ -50,6 +51,7 @@ class MainActivity : FragmentActivity() {
                         putString("session_token_expiry", sessionTokenExpiration)
                         putString("username", userInfo?.username)
                         putString("userID", userInfo?.userID)
+                        putString("user_media_list_options", userInfo?.userMediaListOptions)
                         apply()
                     }
                 }
@@ -78,22 +80,38 @@ class MainActivity : FragmentActivity() {
                 )
         )
 
-        val response = try {
+        val viewerQueryResponse = try {
             apolloClient.query(GetViewerQuery())
         } catch (e: ApolloException) {
             Log.d("GETUSERINFO", e.toString())
             return userInfo
         }
 
-        val launch = response.data?.viewer
-        if (launch == null || response.hasErrors()) {
+        val viewer = viewerQueryResponse.data?.viewer
+        if (viewer == null || viewerQueryResponse.hasErrors()) {
             return userInfo
         }
 
-        userInfo?.username = launch.name
-        userInfo?.userID = launch.id.toString()
+        userInfo?.username = viewer.name
+        userInfo?.userID = viewer.id.toString()
 
-        Log.d("DEEZ NUTS", "QQQQQ ${launch.id} ${launch.name}")
+        Log.d("DEEZ NUTS", "QQQQQ ${viewer.id} ${viewer.name}")
+
+        //
+
+        val userMediaListOptionsResponse = try {
+            apolloClient.query(GetUserMediaListOptionsQuery(userInfo?.userID.toInt()))
+        } catch (e: ApolloException) {
+            Log.d("GETUSERMEDISLISTOPTIONS", e.toString())
+            return userInfo
+        }
+
+        val user = userMediaListOptionsResponse.data?.user
+        if (user == null || userMediaListOptionsResponse.hasErrors()) {
+            return userInfo
+        }
+
+        userInfo.userMediaListOptions = user.mediaListOptions?.scoreFormat?.rawValue.toString()
 
         return userInfo
     }

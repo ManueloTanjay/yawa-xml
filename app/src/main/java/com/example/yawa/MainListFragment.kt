@@ -26,6 +26,7 @@ private var sessionToken = ""
 private var username = ""
 private var userID = ""
 private var sessionTokenExpiry = ""
+private var mediaListOptions = ""
 
 /**
  * A simple [Fragment] subclass.
@@ -48,11 +49,10 @@ class MainListFragment : Fragment() {
         username = sharedPreferences?.getString("username", null).toString()
         userID = sharedPreferences?.getString("userID", null).toString()
         sessionTokenExpiry = sharedPreferences?.getString("session_token_expiry", null).toString()
-
+        mediaListOptions = sharedPreferences?.getString("user_media_list_options", null).toString()
 
         val s = sessionToken
         val i = 0
-
     }
 
     override fun onAttach(context: Context) {
@@ -83,26 +83,8 @@ class MainListFragment : Fragment() {
                 )
         )
         runBlocking {
-            view.sTokenTV.text = "username: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + sessionToken
+            view.sTokenTV.text = "userMediaListOptions: " + mediaListOptions + "\nusername: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + sessionToken
                     Log.d("DEEZ NUTS", "QQQQQ $userID $username")
-            /////////////////////////////////////////////
-//            val response2 = try {
-//                apolloClient.query(GetUserMediaListOptionsQuery(userID.toInt()))
-//            } catch (e: ApolloException) {
-//                Log.d("qwerty", e.toString())
-//                val toast = Toast.makeText(context, e.toString(), Toast.LENGTH_LONG)
-//                toast.show()
-//                return@runBlocking
-//            }
-//            val launch2 = response2.data?.user
-//            if (launch2 == null || response2.hasErrors()) {
-//                return@runBlocking
-//            }
-//
-//            var op = launch2.mediaListOptions?.scoreFormat?.rawValue
-//
-//            //view.s_token.text = "username: " + username + "\nuserID: " + userID
-//            Log.d("2ND QUERY", "QQQQQ" + op + "\n")
         }
     }
 
