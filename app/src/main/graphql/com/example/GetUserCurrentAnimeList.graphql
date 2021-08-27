@@ -18,6 +18,9 @@ query GetUserCurrentAnimeList ($page: Int, $perPage: Int, $username: String) {
                     english
                     romaji
                 }
+                coverImage {
+                        medium
+                }
             }
         }
     }
