@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.apollographql.apollo3.network.http.HttpNetworkTransport
@@ -40,25 +41,21 @@ class MainActivity : FragmentActivity() {
 
         runBlocking {
             //check if session token exists
-            if (!(sessionToken === null)) {
-                if (!sharedPreferences.contains("session_token")) {
+            if (!(sessionToken === null) && !sharedPreferences.contains("session_token")) {
+                //get userInfo
+                val userInfo = getUserInfo(sessionToken.toString())
 
-                    //get userInfo
-                    val userInfo = getUserInfo(sessionToken.toString())
-
-                    editor.apply {
-                        putString("session_token", sessionToken)
-                        putString("session_token_expiry", sessionTokenExpiration)
-                        putString("username", userInfo?.username)
-                        putString("userID", userInfo?.userID)
-                        putString("user_media_list_options", userInfo?.userMediaListOptions)
-                        apply()
-                    }
+                editor.apply {
+                    putString("session_token", sessionToken)
+                    putString("session_token_expiry", sessionTokenExpiration)
+                    putString("username", userInfo?.username)
+                    putString("userID", userInfo?.userID)
+                    putString("user_media_list_options", userInfo?.userMediaListOptions)
+                    apply()
                 }
             }
             if (sharedPreferences.contains("session_token")) {
                 sessionToken = sharedPreferences.getString("session_token", null)
-
                 //create and inflate MainListFragment
                 val mainListFragment = MainListFragment.newInstance(sessionToken)
                 supportFragmentManager.beginTransaction().apply {
@@ -69,7 +66,7 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    //function to get userID and username using GetViewer and pass into MainListFragment.newInstance()
+    //function to get userID, username, mediaListOptions using GetViewer and GetUserMediaListOptions and pass into MainListFragment.newInstance()
     suspend fun getUserInfo(session_token: String): User? {
         var userInfo = User()
 
@@ -79,7 +76,7 @@ class MainActivity : FragmentActivity() {
                         interceptors = listOf(MainListFragment.AuthorizationInterceptor(session_token))
                 )
         )
-
+        //get username and userID
         val viewerQueryResponse = try {
             apolloClient.query(GetViewerQuery())
         } catch (e: ApolloException) {
@@ -88,17 +85,13 @@ class MainActivity : FragmentActivity() {
         }
 
         val viewer = viewerQueryResponse.data?.viewer
-        if (viewer == null || viewerQueryResponse.hasErrors()) {
+        if (viewer == null || viewerQueryResponse.hasErrors())
             return userInfo
-        }
 
         userInfo?.username = viewer.name
         userInfo?.userID = viewer.id.toString()
-
         Log.d("DEEZ NUTS", "QQQQQ ${viewer.id} ${viewer.name}")
-
-        //
-
+        //get userMediaListOptions
         val userMediaListOptionsResponse = try {
             apolloClient.query(GetUserMediaListOptionsQuery(userInfo?.userID.toInt()))
         } catch (e: ApolloException) {
@@ -107,12 +100,10 @@ class MainActivity : FragmentActivity() {
         }
 
         val user = userMediaListOptionsResponse.data?.user
-        if (user == null || userMediaListOptionsResponse.hasErrors()) {
+        if (user == null || userMediaListOptionsResponse.hasErrors())
             return userInfo
-        }
 
         userInfo.userMediaListOptions = user.mediaListOptions?.scoreFormat?.rawValue.toString()
-
         return userInfo
     }
 }

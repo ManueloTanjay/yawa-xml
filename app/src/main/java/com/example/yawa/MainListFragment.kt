@@ -21,6 +21,8 @@ import com.apollographql.apollo3.network.http.HttpNetworkTransport
 import kotlinx.android.synthetic.main.fragment_main_list.view.*
 import kotlinx.coroutines.runBlocking
 
+import kotlinx.coroutines.channels.Channel
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -87,7 +89,7 @@ class MainListFragment : Fragment() {
         runBlocking {
             view.sTokenTV.text = "userMediaListOptions: " + mediaListOptions + "\nusername: " + username + "\nuserID: " + userID + "\nsession token expiration: " + sessionTokenExpiry + "\nstoken: " + sessionToken
             Log.d("DEEZ NUTS", "QQQQQ $userID $username")
-
+///
             val userCurrentAnimeList = try {
                 apolloClient.query(GetUserCurrentAnimeListQuery(1, 50, username))
             } catch (e: ApolloException) {
@@ -101,7 +103,9 @@ class MainListFragment : Fragment() {
             }
 
 //            view.sTokenTV.text = userCurrentAnimeListData.toString()
+            view.sTokenTV.text = userCurrentAnimeListData.page?.mediaList.toString()
             Log.d("USERCURRANIDATA", userCurrentAnimeListData.toString())
+
         }
     }
 
